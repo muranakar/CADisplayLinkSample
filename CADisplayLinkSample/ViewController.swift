@@ -12,8 +12,6 @@ class ViewController: UIViewController {
     var disPlayLink = CADisplayLink()
 
     // MARK: - IBOutlet
-    @IBOutlet weak var hour: UILabel!
-    @IBOutlet weak var min: UILabel!
     @IBOutlet weak var sec: UILabel!
 
     // MARK: - Variable constant
@@ -45,7 +43,7 @@ class ViewController: UIViewController {
         stopTime = CFAbsoluteTimeGetCurrent() - startTime
         guard let stopTime = stopTime else { return }
 
-        sec.text = "\(stopTime)"
+        sec.text = "\(floor(stopTime*100)/100)"
     }
 }
 
