@@ -9,11 +9,43 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+    var disPlayLink = CADisplayLink()
+
+    // MARK: - IBOutlet
+    @IBOutlet weak var hour: UILabel!
+    @IBOutlet weak var min: UILabel!
+    @IBOutlet weak var sec: UILabel!
+
+    // MARK: - Variable constant
+    var startTime:CFTimeInterval?
+    var stopTime:CFTimeInterval?
+
+    // MARK: - Method
+
+    @IBAction func start(_ sender: Any) {
+        startTime = CFAbsoluteTimeGetCurrent()
+        createDisplayLink()
     }
 
+    @IBAction func stop(_ sender: Any) {
+        disPlayLink.invalidate()
+        guard let startTime = startTime else { return }
+        stopTime = CFAbsoluteTimeGetCurrent() - startTime
+    }
 
+    func createDisplayLink() {
+        disPlayLink = CADisplayLink(target: self,
+                                        selector: #selector(step))
+        disPlayLink.add(to: .current,
+                        forMode: .default)
+    }
+
+    @objc func step(displaylink: CADisplayLink) {
+        guard let startTime = startTime else { return }
+        stopTime = CFAbsoluteTimeGetCurrent() - startTime
+        guard let stopTime = stopTime else { return }
+
+        sec.text = "\(stopTime)"
+    }
 }
 
