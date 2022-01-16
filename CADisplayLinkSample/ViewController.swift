@@ -9,7 +9,7 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var disPlayLink = CADisplayLink()
+    private weak var disPlayLink: CADisplayLink?
 
     // MARK: - IBOutlet
     @IBOutlet weak var sec: UILabel!
@@ -22,20 +22,23 @@ class ViewController: UIViewController {
 
     @IBAction func start(_ sender: Any) {
         startTime = CFAbsoluteTimeGetCurrent()
+        disPlayLink?.invalidate()
         createDisplayLink()
     }
 
     @IBAction func stop(_ sender: Any) {
-        disPlayLink.invalidate()
+        disPlayLink?.invalidate()
         guard let startTime = startTime else { return }
         stopTime = CFAbsoluteTimeGetCurrent() - startTime
     }
 
     func createDisplayLink() {
-        disPlayLink = CADisplayLink(target: self,
+
+         let link = CADisplayLink(target: self,
                                         selector: #selector(step))
-        disPlayLink.add(to: .current,
+        link.add(to: .current,
                         forMode: .default)
+        disPlayLink = link
     }
 
     @objc func step(displaylink: CADisplayLink) {
